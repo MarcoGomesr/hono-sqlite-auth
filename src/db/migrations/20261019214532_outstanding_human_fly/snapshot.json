@@ -1,0 +1,224 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "188e5693-b608-4738-84d3-8314a327893d",
+  "prevIds": [
+    "48c2668a-8b63-46e1-8fbd-729dea54e9dd"
+  ],
+  "ddl": [
+    {
+      "name": "auth",
+      "entityType": "tables"
+    },
+    {
+      "name": "authors",
+      "entityType": "tables"
+    },
+    {
+      "name": "api_keys",
+      "entityType": "tables"
+    },
+    {
+      "type": "text(36)",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "auth"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "email",
+      "entityType": "columns",
+      "table": "auth"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "passwordHash",
+      "entityType": "columns",
+      "table": "auth"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'users'",
+      "generated": null,
+      "name": "role",
+      "entityType": "columns",
+      "table": "auth"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "1792446332",
+      "generated": null,
+      "name": "createdAt",
+      "entityType": "columns",
+      "table": "auth"
+    },
+    {
+      "type": "text(36)",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "authors"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "authors"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "birthday",
+      "entityType": "columns",
+      "table": "authors"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "1792446332",
+      "generated": null,
+      "name": "createdAt",
+      "entityType": "columns",
+      "table": "authors"
+    },
+    {
+      "type": "text(36)",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "api_keys"
+    },
+    {
+      "type": "text(36)",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "api_keys"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "api_keys"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "keyHash",
+      "entityType": "columns",
+      "table": "api_keys"
+    },
+    {
+      "type": "text(8)",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "keyPrefix",
+      "entityType": "columns",
+      "table": "api_keys"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "1792446332",
+      "generated": null,
+      "name": "createdAt",
+      "entityType": "columns",
+      "table": "api_keys"
+    },
+    {
+      "columns": [
+        "user_id"
+      ],
+      "tableTo": "auth",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_api_keys_user_id_auth_id_fk",
+      "entityType": "fks",
+      "table": "api_keys"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "Auth_pk",
+      "table": "auth",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "authors_pk",
+      "table": "authors",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "api_keys_pk",
+      "table": "api_keys",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "email"
+      ],
+      "nameExplicit": false,
+      "name": "Auth_email_unique",
+      "entityType": "uniques",
+      "table": "auth"
+    }
+  ],
+  "renames": []
+}

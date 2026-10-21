@@ -1,0 +1,136 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "bb2ac024-8ab5-4ea4-a10a-97f02524b287",
+  "prevIds": [
+    "46399cc6-0ba1-45e8-9aa2-e491897e7be5"
+  ],
+  "ddl": [
+    {
+      "name": "Auth",
+      "entityType": "tables"
+    },
+    {
+      "name": "authors",
+      "entityType": "tables"
+    },
+    {
+      "type": "text(36)",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "Auth"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "email",
+      "entityType": "columns",
+      "table": "Auth"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "passwordHash",
+      "entityType": "columns",
+      "table": "Auth"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'users'",
+      "generated": null,
+      "name": "role",
+      "entityType": "columns",
+      "table": "Auth"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "1791818306",
+      "generated": null,
+      "name": "createdAt",
+      "entityType": "columns",
+      "table": "Auth"
+    },
+    {
+      "type": "text(36)",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "authors"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "authors"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "birthday",
+      "entityType": "columns",
+      "table": "authors"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "1791818306",
+      "generated": null,
+      "name": "createdAt",
+      "entityType": "columns",
+      "table": "authors"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "Auth_pk",
+      "table": "Auth",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "authors_pk",
+      "table": "authors",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "email"
+      ],
+      "nameExplicit": false,
+      "name": "Auth_email_unique",
+      "entityType": "uniques",
+      "table": "Auth"
+    }
+  ],
+  "renames": []
+}
