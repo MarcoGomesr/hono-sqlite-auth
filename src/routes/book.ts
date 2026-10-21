@@ -4,7 +4,7 @@ import z from "zod";
 import { db } from "../db/db.ts";
 import { AuthorTable, BookTable } from "../db/schema.ts";
 import { and, eq, sql } from "drizzle-orm";
-import { apiKeyAuth, type ApiKeyEnv } from "../middleware/auth.ts";
+import { anyAuth, type AuthEnv } from "../middleware/auth.ts";
 
 const app = new Hono();
 
@@ -43,11 +43,11 @@ app.get("/:id", async (c) => {
 	return c.json(book);
 });
 
-const protectedApp = new Hono<ApiKeyEnv>();
-protectedApp.use(apiKeyAuth);
+const protectedApp = new Hono<AuthEnv>();
+protectedApp.use(anyAuth);
 
 protectedApp.post("/", sValidator("json", createBookSchema), async (c) => {
-	const { id: userId } = c.get("apiKeyUser");
+	const { id: userId } = c.get("authUser");
 	const data = c.req.valid("json");
 
 	const author = await db.query.AuthorTable.findFirst({
@@ -67,8 +67,12 @@ protectedApp.post("/", sValidator("json", createBookSchema), async (c) => {
 
 protectedApp.put("/:id", sValidator("json", updateBookSchema), async (c) => {
 	const id = c.req.param("id");
-	const { id: userId, role } = c.get("apiKeyUser");
+	const { id: userId, role } = c.get("authUser");
 	const data = c.req.valid("json");
+
+	if (Object.keys(data).length === 0) {
+		return c.json({ error: "No fields to update" }, 400);
+	}
 
 	if (data.authorId != null) {
 		const author = await db.query.AuthorTable.findFirst({
@@ -86,11 +90,23 @@ protectedApp.put("/:id", sValidator("json", updateBookSchema), async (c) => {
 				eq(BookTable.id, id),
 				sql`${BookTable.addedBy} = ${userId}`,
 			);
+
+	const [book] = await db
+		.update(BookTable)
+		.set(data)
+		.where(whereClause)
+		.returning();
+
+	if (book == null) {
+		return c.json({ error: "Book not found" }, 404);
+	}
+
+	return c.json(book);
 });
 
 protectedApp.delete("/:id", async (c) => {
 	const id = c.req.param("id");
-	const { id: userId, role } = c.get("apiKeyUser");
+	const { id: userId, role } = c.get("authUser");
 
 	const whereClause =
 		role === "admin"
@@ -100,7 +116,14 @@ protectedApp.delete("/:id", async (c) => {
 				sql`${BookTable.addedBy} = ${userId}`,
 			);
 
-	await db.delete(BookTable).where(whereClause);
+	const deleted = await db
+		.delete(BookTable)
+		.where(whereClause)
+		.returning({ id: BookTable.id });
+
+	if (deleted.length === 0) {
+		return c.json({ error: "Book not found" }, 404);
+	}
 
 	return c.body(null, 204);
 });

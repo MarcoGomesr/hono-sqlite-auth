@@ -2,7 +2,7 @@ import { sValidator } from "@hono/standard-validator";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
-import { type ApiKeyEnv, apiKeyAuth } from "../middleware/auth.ts";
+import { anyAuth, type AuthEnv } from "../middleware/auth.ts";
 import { db } from "../db/db.ts";
 import { AuthorTable } from "../db/schema.ts";
 
@@ -18,8 +18,8 @@ const updateAuthorSchema = z.object({
 	birthday: z.coerce.date().nullable().optional(),
 });
 
-const protectedApp = new Hono<ApiKeyEnv>();
-protectedApp.use(apiKeyAuth);
+const protectedApp = new Hono<AuthEnv>();
+protectedApp.use(anyAuth);
 
 app.get("/", async (c) => {
 	const authors = await db.select().from(AuthorTable);
@@ -69,7 +69,13 @@ protectedApp.put("/:id", sValidator("json", updateAuthorSchema), async (c) => {
 
 protectedApp.delete("/:id", async (c) => {
 	const id = c.req.param("id");
-	await db.delete(AuthorTable).where(eq(AuthorTable.id, id));
+	const deleted = await db
+		.delete(AuthorTable)
+		.where(eq(AuthorTable.id, id))
+		.returning({ id: AuthorTable.id });
+	if (deleted.length === 0) {
+		return c.json({ error: "Author not found" }, 404);
+	}
 	return c.newResponse(null, 204);
 });
 

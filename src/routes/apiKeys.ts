@@ -1,7 +1,6 @@
 import { sValidator } from "@hono/standard-validator";
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { raw } from "hono/html";
 import { jwt } from "hono/jwt";
 import { z } from "zod";
 import { env } from "../data/env.ts";
@@ -51,14 +50,18 @@ app.post("/", sValidator("json", createKeySchema), async (c) => {
 	return c.json({ key: raw, id: apiKey.id }, 201);
 });
 
-app.delete("/:id", sValidator("json", createKeySchema), async (c) => {
+app.delete("/:id", async (c) => {
 	const { sub: userId } = c.var.jwtPayload;
 	const id = c.req.param("id");
 
-	await db
+	const deleted = await db
 		.delete(ApiKeyTable)
 		.where(and(eq(ApiKeyTable.id, id), eq(ApiKeyTable.userId, userId)))
 		.returning({ id: ApiKeyTable.id });
+
+	if (deleted.length === 0) {
+		return c.json({ error: "API key not found" }, 404);
+	}
 
 	return c.body(null, 204);
 });
